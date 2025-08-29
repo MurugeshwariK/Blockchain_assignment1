@@ -1,0 +1,92 @@
+import hashlib
+import time
+import json
+
+class Transaction:
+    def __init__(self, sender, receiver, amount):
+        self.sender = sender
+        self.receiver = receiver
+        self.amount = amount
+
+    def to_dict(self):
+        return {"sender": self.sender, "receiver": self.receiver, "amount": self.amount}
+
+class Block:
+    def __init__(self, index, transactions, previous_hash, timestamp, nonce=0):
+        self.index = index
+        self.transactions = transactions  # list of transactions
+        self.previous_hash = previous_hash
+        self.timestamp = timestamp
+        self.nonce = nonce
+        self.hash = self.calculate_hash()
+
+    def calculate_hash(self):
+        block_string = json.dumps({
+            "index": self.index,
+            "transactions": [tx.to_dict() for tx in self.transactions],
+            "previous_hash": self.previous_hash,
+            "timestamp": self.timestamp,
+            "nonce": self.nonce
+        }, sort_keys=True).encode()
+        return hashlib.sha256(block_string).hexdigest()
+
+    def mine_block(self, difficulty):
+        # Proof of Work: find a hash with leading zeros
+        while self.hash[:difficulty] != "0" * difficulty:
+            self.nonce += 1
+            self.hash = self.calculate_hash()
+
+class Blockchain:
+    def __init__(self):
+        self.chain = [self.create_genesis_block()]
+        self.difficulty = 3   # Increase for slower mining
+        self.pending_transactions = []
+        self.mining_reward = 50
+
+    def create_genesis_block(self):
+        return Block(0, [], "0", time.time())
+
+    def get_latest_block(self):
+        return self.chain[-1]
+
+    def add_transaction(self, sender, receiver, amount):
+        tx = Transaction(sender, receiver, amount)
+        self.pending_transactions.append(tx)
+
+    def mine_pending_transactions(self, miner_address):
+        block = Block(len(self.chain), self.pending_transactions, self.get_latest_block().hash, time.time())
+        block.mine_block(self.difficulty)
+
+        print(f"Block mined: {block.hash}")
+        self.chain.append(block)
+
+        # Reward the miner
+        self.pending_transactions = [Transaction("SYSTEM", miner_address, self.mining_reward)]
+
+    def get_balance(self, address):
+        balance = 0
+        for block in self.chain:
+            for tx in block.transactions:
+                if tx.sender == address:
+                    balance -= tx.amount
+                if tx.receiver == address:
+                    balance += tx.amount
+        return balance
+
+
+# -------------------- DEMO --------------------
+mycoin = Blockchain()
+
+# Add some transactions
+mycoin.add_transaction("Alice", "Bob", 100)
+mycoin.add_transaction("Bob", "Charlie", 50)
+
+print("Starting the miner...")
+mycoin.mine_pending_transactions("Miner1")
+
+print("Miner1 Balance:", mycoin.get_balance("Miner1"))
+
+print("Starting the miner again...")
+mycoin.mine_pending_transactions("Miner1")
+
+print("Miner1 Balance:", mycoin.get_balance("Miner1"))
