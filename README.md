@@ -1,4 +1,4 @@
-Simple Blockchain in Python
+#Simple Blockchain in Python
 
 This is a basic blockchain implementation written in Python.
 It demonstrates how transactions, blocks, proof-of-work (mining), and rewards work in a simplified blockchain system.
