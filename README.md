@@ -1,42 +1,37 @@
-Simple Blockchain in Python
+Simple Blockchain in Python:
 
 This is a basic blockchain implementation written in Python.
 It demonstrates how transactions, blocks, proof-of-work (mining), and rewards work in a simplified blockchain system.
 
-Features
+Features:
+* Create transactions between users
+* Proof-of-Work mining (adjustable difficulty)
+* Mining rewards for miners
+* Genesis block creation
+* Balance checking for any address
 
-Create transactions between users
+Project Structure:
 
-Proof-of-Work mining (adjustable difficulty)
-
-Mining rewards for miners
-
-Genesis block creation
-
-Balance checking for any address
-
-Project Structure
+```
 blockchain.py   # Main blockchain implementation
 README.md       # Project documentation
+```
+How It Works:
+1. Transactions are created and added to a pending pool.
+2. Miners pick up pending transactions and create a block.
+3. Each block is hashed using SHA-256 until it meets the difficulty requirement.
+4. The block is added to the blockchain.
+5. Miners receive a reward for successfully mining.
 
-How It Works
+Demo Run:
 
-Transactions are created and added to a pending pool.
-
-Miners pick up pending transactions and create a block.
-
-Each block is hashed using SHA-256 until it meets the difficulty requirement.
-
-The block is added to the blockchain.
-
-Miners receive a reward for successfully mining.
-
-Demo Run
+```bash
 python blockchain.py
-
+```
 
 Sample Output:
 
+```
 Starting the miner...
 Block mined: 000a5f....
 Miner1 Balance: 0
@@ -44,8 +39,10 @@ Miner1 Balance: 0
 Starting the miner again...
 Block mined: 000c91....
 Miner1 Balance: 50
+```
+Example Code:
 
-Example Code
+python
 mycoin = Blockchain()
 
 # Add some transactions
@@ -59,14 +56,12 @@ print("Miner1 Balance:", mycoin.get_balance("Miner1"))
 
 Requirements
 
-Python 3.x
+* Python 3.x
+* No external libraries (only built-in modules: `hashlib`, `time`, `json`)
 
-No external libraries (only built-in modules: hashlib, time, json)
+Notes:
 
-Notes
+* This is a simplified blockchain for learning purposes only.
+* It does not include networking, signatures, or consensus algorithms like real blockchains (Bitcoin, Ethereum).
+* Difficulty and mining rewards can be adjusted in the `Blockchain` class.
 
-This is a simplified blockchain for learning purposes only.
-
-It does not include networking, signatures, or consensus algorithms like real blockchains (Bitcoin, Ethereum).
-
-Difficulty and mining rewards can be adjusted in the Blockchain class.
